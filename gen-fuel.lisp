@@ -43,4 +43,4 @@
 		(coerce (with-auth (post-fuel "219" (random-factory 2))) 'list))))
     ;(if (ppcre:scan-to-strings "unexpected" string)
     ;"NO" "YES")))
-    ))
+    string))
