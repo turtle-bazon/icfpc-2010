@@ -11,16 +11,15 @@
 
 (defmacro with-auth (&body body)
   (let ((auth-cookies (gensym)))
-    `(if *auth-cookies* (progn ,@body)
-         (let ((,auth-cookies (make-instance 'drakma:cookie-jar)))
-           (drakma:http-request
-            "http://icfpcontest.org/icfp10/static/j_spring_security_check"
-            :method :post
-            :parameters `(("j_username" . ,*user*)
-                          ("j_password"  . ,*pass*))
-            :cookie-jar ,auth-cookies)
-           (setf *auth-cookies* ,auth-cookies)
-           ,@body))))
+    `(let ((,auth-cookies (make-instance 'drakma:cookie-jar)))
+       (drakma:http-request
+        "http://icfpcontest.org/icfp10/static/j_spring_security_check"
+        :method :post
+        :parameters `(("j_username" . ,*user*)
+                      ("j_password"  . ,*pass*))
+        :cookie-jar ,auth-cookies)
+       (setf *auth-cookies* ,auth-cookies)
+       ,@body)))
 
 
 (defun post-fuel (car-number factory-string)
