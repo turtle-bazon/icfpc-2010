@@ -1,7 +1,7 @@
-(defun make-node (in1 in2 out1 out2 &key no-newline)
+(defun make-node (in1 in2 out1 out2)
   (concatenate 'string
-	       in1 in2 "0" "\\#"
-	       out1 out2 (if no-newline "" "\\n")))
+	       in1 in2 "0#"
+	       out1 out2))
 
 (defun possible-connects-list (nodes-num)
   (let ((list nil))
@@ -26,14 +26,15 @@
 	(head-connect (concatenate 'string (write-to-string (1- nodes-num)) "L")))
     (setf connects (remove head-connect connects :test #'string=))
     (push head-connect strlst)
-    (push ":\\n" strlst)
+    (push ":" strlst)
     (dotimes (i (1- nodes-num))
       (push (make-node (pop connects) (pop connects) (pop connects) (pop connects))
-	    strlst))
+	    strlst)
+      (push "," strlst))
     (if (= (random 2) 1)
-	(push (make-node (pop connects) "X" (pop connects) "X" :no-newline t) strlst)	      
-	(push (make-node "X" (pop connects) "X" (pop connects) :no-newline t) strlst))
-    (push ":\\n" strlst)
+	(push (make-node (pop connects) "X" (pop connects) "X") strlst)	      
+	(push (make-node "X" (pop connects) "X" (pop connects)) strlst))
+    (push ":" strlst)
     (push head-connect strlst)
     (apply #'concatenate 'string (nreverse strlst))))
 
