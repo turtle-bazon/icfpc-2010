@@ -26,6 +26,7 @@
 	(head-connect (concatenate 'string (write-to-string (1- nodes-num)) "L")))
     (setf connects (remove head-connect connects :test #'string=))
     (push head-connect strlst)
+    (push ":\\n")
     (dotimes (i (1- nodes-num))
       (push (make-node (pop connects) (pop connects) (pop connects) (pop connects))
 	    strlst))
