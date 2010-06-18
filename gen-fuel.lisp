@@ -36,3 +36,10 @@
     (push ":\\n" strlst)
     (push head-connect strlst)
     (apply #'concatenate 'string (nreverse strlst))))
+
+(defun test-submit-factory (factory)
+  (let ((string
+	 (apply #'concatenate 'string
+		(coerce (with-auth (post-fuel "219" (random-factory 2))) 'list))))
+    (if (ppcre:scan-to-strings "unexpected" string)
+	"NO" "YES")))
