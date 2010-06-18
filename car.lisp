@@ -1,9 +1,10 @@
 ;;;
-;;; car.lisp --- CAR specification.
+;;; car.lisp --- Technical Specification of Cars.
 ;;;
 
-;;; CAR CLOS representation:
+;;; CAR classes:
 
+;; FIXME: may be we need to drop out this class `fuel-tank'
 (defclass fuel-tank ()
   ((name :reader name :initarg :name :type symbol)))
 
@@ -20,7 +21,7 @@
 (defclass car-engine ()
   ((chambers :reader chambers :initarg :chambers :type list)))
 
-;;; Generate CAR representation.
+;;; CAR constructors:
 
 (defmethod make-fuel-tank (name)
   (make-instance 'fuel-tank
@@ -43,18 +44,39 @@
   (make-instance 'car-engine
                  :chambers (mapcar #'make-chamber chambers-names)))
 
+;;; PRINT-OBJECT for CAR:
+
+;; FIXME: more pretty-printing.
+
+(defmethod print-object ((section section) stream)
+  (format stream "<:section to fuel-tank ~A>" (name (fuel-tank section))))
+
+(defmethod print-object ((pipe pipe) stream)
+  (mapcar #'(lambda (e) (print e stream))
+          (cons :pipe (sections pipe))))
+
+(defmethod print-object ((chamber chamber) stream)
+  (mapcar #'(lambda (e) (print e stream))
+          (list :chamber (upper-pipe chamber) (lower-pipe chamber))))
+
+(defmethod print-object ((car-engine car-engine) stream)
+  (mapcar #'(lambda (e) (print e stream))
+          (cons :car-engine (chambers car-engine))))
+
+;;; CAR DSL:
+
+;; TODO:
+;; (defmacro define-car 
+
 ;;; Theorem
 
 #|
-
   Each CAR parametrizated with list of two lists of fuel-tank names.
-
 |#
 
 ;;; Example
 
 #|
-
   CAR with one CHAMBER.
 
       upper pipe:  -> section -> section ------------.
@@ -65,9 +87,21 @@
     \ lower pipe:  -> section -> section -> section -'
                                     /
              fuel 1 ---------------'
-
 |#
 
 (make-car-engine           ;; one chamber
  '(((fuel0 fuel0)          ;; <<-- first  list of fuel-tank names.
     (fuel0 fuel1 fuel0)))) ;; <<-- second list of fuel-tank names.
+
+;; =>
+
+;; :CAR-ENGINE
+;; :CHAMBER
+;; :PIPE
+;; <:section to fuel-tank FUEL0>
+;; <:section to fuel-tank FUEL0>
+;;
+;; :PIPE
+;; <:section to fuel-tank FUEL0>
+;; <:section to fuel-tank FUEL1>
+;; <:section to fuel-tank FUEL0>
