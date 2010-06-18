@@ -17,7 +17,7 @@
           :method :post
           :parameters `(("j_username" . ,*user*)
                         ("j_password"  . ,*pass*))
-          :cookie-jar ,auth-cookies)
+          :cookie-jar auth-cookies)
          (setf *auth-cookies* auth-cookies)
          ,@body)))
 
