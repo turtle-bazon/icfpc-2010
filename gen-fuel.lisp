@@ -48,6 +48,7 @@
 (defun search-proper-factories (factory-size max-iter)
   (let ((proper-factories nil))
     (dotimes (i max-iter)
-      (push (test-submit-factory (random-factory factory-size)) proper-factories))
+      (let ((result (test-submit-factory (random-factory factory-size))))
+	(if result (push result proper-factories))))
     (nreverse proper-factories)))
       
