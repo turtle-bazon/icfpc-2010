@@ -13,7 +13,7 @@
   (let ((auth-cookies (gensym)))
     `(if *auth-cookies* (progn ,@body)
          (let ((,auth-cookies (make-instance 'drakma:cookie-jar)))
-           (http-request
+           (drakma:http-request
             "http://icfpcontest.org/icfp10/static/j_spring_security_check"
             :method :post
             :parameters `(("j_username" . ,*user*)
