@@ -24,10 +24,13 @@
 
 (defun post-fuel (car-number factory-string)
   ;; Example usage: (with-auth (post-fuel "219" "0L:\n0LX0\#0L0R:\n0L"))
-  (nth-value 1
-             (cl-ppcre:scan-to-strings "<pre>(.*)</pre>"
-                                       (drakma:http-request
-                                        (format nil "http://icfpcontest.org/icfp10/instance/~a/solve" car-number)
-                                        :method :post
-                                        :parameters (cons "contents" factory-string)
-                                        :cookie-jar auth-cookies))))
+  (nth-value
+   1
+   (cl-ppcre:scan-to-strings
+    "<pre>(.*)</pre>"
+    (remove #\Newline
+            (drakma:http-request
+             (format nil "http://icfpcontest.org/icfp10/instance/~a/solve" car-number)
+             :method :post
+             :parameters (list (cons "contents" factory-string))
+             :cookie-jar *auth-cookies*)))))
