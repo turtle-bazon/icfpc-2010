@@ -4,4 +4,5 @@
   :components (;; tools
                (:file "post")
                ;; models
-               (:file "car")))
+               (:file "car")
+	       (:file "gen-fuel")))
