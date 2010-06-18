@@ -65,7 +65,8 @@
 
 ;;; CAR DSL:
 
-;; TODO:
+;; TODO: написать представление машин в виде s-форм с ключами.
+
 ;; (defmacro define-car 
 
 ;;; Theorem
