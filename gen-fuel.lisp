@@ -1,7 +1,5 @@
-(defun make-node (in1 in2 out1 out2)
-  (concatenate 'string
-	       in1 in2 "0#"
-	       out1 out2))
+(defun make-node (left-in rigth-in left-out rigth-out)
+  (format nil "~A~A0#~A~A" left-in rigth-in left-out rigth-out))
 
 (defun possible-connects-list (nodes-num)
   (let ((list nil))
@@ -42,6 +40,14 @@
   (let ((string
 	 (apply #'concatenate 'string
 		(coerce (with-auth (post-fuel "219" factory)) 'list))))
-    ;(if (ppcre:scan-to-strings "unexpected" string)
-    ;"NO" "YES")))
-    string))
+    (when (not (or (ppcre:scan-to-strings "unexpected" string)
+		   (ppcre:scan-to-strings "inconsistent" string)
+		   (ppcre:scan-to-strings "illegal" string)))
+      (list factory string))))
+
+(defun search-proper-factories (factory-size max-iter)
+  (let ((proper-factories nil))
+    (dotimes (i max-iter)
+      (push (test-submit-factory (random-factory factory-size)) proper-factories))
+    (nreverse proper-factories)))
+      
