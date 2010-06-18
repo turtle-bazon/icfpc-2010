@@ -11,14 +11,14 @@
 
 (defmacro with-auth (&body body)
   `(if *auth-cookies* (progn ,@body)
-       (let ((,auth-cookies (make-instance 'drakma:cookie-jar)))
+       (let ((auth-cookies (make-instance 'drakma:cookie-jar)))
          (http-request
           "http://icfpcontest.org/icfp10/static/j_spring_security_check"
           :method :post
           :parameters `(("j_username" . ,*user*)
                         ("j_password"  . ,*pass*))
           :cookie-jar ,auth-cookies)
-         (setf *auth-cookies* ,auth-cookies)
+         (setf *auth-cookies* auth-cookies)
          ,@body)))
 
 
@@ -30,7 +30,8 @@
     "<pre>(.*)</pre>"
     (substitute #\Space #\Newline
                 (drakma:http-request
-                 (format nil "http://icfpcontest.org/icfp10/instance/~a/solve" car-number)
+                 (format nil "http://icfpcontest.org/icfp10/instance/~a/solve"
+                         car-number)
                  :method :post
                  :parameters (list (cons "contents" factory-string))
                  :cookie-jar *auth-cookies*)))))
