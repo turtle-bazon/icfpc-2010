@@ -40,7 +40,7 @@
 (defun test-submit-factory (factory)
   (let ((string
 	 (apply #'concatenate 'string
-		(coerce (with-auth (post-fuel "219" (random-factory 2))) 'list))))
+		(coerce (with-auth (post-fuel "219" factory)) 'list))))
     ;(if (ppcre:scan-to-strings "unexpected" string)
     ;"NO" "YES")))
     string))
