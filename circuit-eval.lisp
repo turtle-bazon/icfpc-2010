@@ -94,7 +94,7 @@
          (n (length (elt circuit 2)))
          (*nodes* (make-nodeset n))
          (start (cadr (elt circuit 0)))
-         (end (elt circuit 0))
+         (end (elt circuit 1))
          rez)
     (dolist (x input)
       (let ((remaining-nodes (range n)))
@@ -111,7 +111,7 @@
              (calc-node (car remaining-nodes)))))
       (loop :for i :from 0 :to (1- n) :do
          (setf (node-out-l (aref *nodes* i))
-               (node-new-l (aref *nodes* i))))
+               (node-new-l (aref *nodes* i)))))
 ;      (print *nodes*) (terpri))
     (nreverse rez)))
 
@@ -171,7 +171,7 @@
 ;; / \
 
 ;; 3^6 or 18! ???
-#|
+
 (defun left-gate-function (left-in rigth-in)
   (case left-in
     (0 (case rigth-in
@@ -218,4 +218,3 @@
          (0 2)
          (1 2)
          (2 1)))))
-|#
