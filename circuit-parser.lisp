@@ -16,7 +16,7 @@
 (defun parse-token (string)
   (cond ((scan "L" string)    (list :l (parse-integer string :junk-allowed t)))
         ((scan "R" string)    (list :r (parse-integer string :junk-allowed t)))
-        ((string= "X" string) :x)))
+        ((string= "X" string) (list :x))))
 
 (defun %parse-gate (string)
   (register-groups-bind (left rigth)
