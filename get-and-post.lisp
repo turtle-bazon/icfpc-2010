@@ -51,6 +51,12 @@
                       :cookie-jar cookie)))
       0))))
 
+(defun format-cars (cars file)
+  (with-open-file (s file
+		     :if-exists :error
+		     :if-does-not-exist :create)
+    (map nil #'(lambda (car) (format s "~A~%" car)) cars)))
+
 ;;; usage:
 
 #|
