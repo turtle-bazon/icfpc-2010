@@ -4,6 +4,17 @@
 
 (in-package :cl-user)
 
+;; utils
+
+(defun hash-table-from-list (lst &optional test)
+  (loop
+     :with ht = (make-hash-table :test (or test 'eql))
+     :for (k v) :on lst :by #'cddr
+     :do (setf (gethash k ht) v)
+     :finally (return ht)))
+
+
+
 
 (defvar *circuit*)
 
@@ -91,10 +102,8 @@
                                (if (find (list ,dir ,i) (list out11 out12)
                                          :test #'equal)
                                    in1 in2))))))))
-  (defun in-l (i)
-    (in :l i))
-  (defun in-r (i)
-    (in :r i)))
+  (defun in-l (i) (in :l i))
+  (defun in-r (i) (in :r i)))
 
 (defun out-val (outspec)
   (let ((i (cadr outspec)))
@@ -119,19 +128,19 @@
          (end (elt circuit 0))
          rez)
     (dolist (x input)
-      (let ((nodes (range n)))
-        (labels ((recur (i)
+      (let ((remaining-nodes (range n)))
+        (labels ((calc-node (i)
                    (nodecall i)
-                   (setf nodes (remove i nodes))
+                   (setf remaining-nodes (remove i remaining-nodes))
 ;                   (print *nodes*) (terpri) (terpri)
                    (let ((next (next-node i)))
-                     (when (and next (find next nodes))
+                     (when (and next (find next remaining-nodes))
                        (recur next)))))
           (setf *in* x)
           (recur start)
           (push (out-val end) rez)
-          (loop :while nodes :do
-             (recur (car nodes))))))
+          (loop :while remaining-nodes :do
+             (calc-node (car remaining-nodes))))))
     rez))
 
 (defun next-node (i)
@@ -176,13 +185,3 @@
                 (:R 0)
                 ((((:L 0) (:X)) ((:L 0) (:X)))))
               *test-sequence*)
-
-
-;; utils
-
-(defun hash-table-from-list (lst &optional test)
-  (loop
-     :with ht = (make-hash-table :test (or test 'eql))
-     :for (k v) :on lst :by #'cddr
-     :do (setf (gethash k ht) v)
-     :finally (return ht)))
