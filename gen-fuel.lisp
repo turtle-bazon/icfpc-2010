@@ -1,7 +1,8 @@
-(in-package :cl-user)
+;;;
+;;; gen-fuel.lisp -- generate random fuels / post fuels to the server.
+;;;
 
-(defun strings (&rest strings)
-  (apply #'concatenate 'string strings))
+(in-package :icfpc)
 
 (defun possible-connects-list (nodes-num)
   (let ((list nil))
@@ -68,18 +69,7 @@
         (if result (push result proper-factories))))
     (nreverse proper-factories)))
 
-
-
 ;;; new variant
-
-(defun range (n)
-  (let (rez)
-    (dotimes (i n)
-      (push i rez))
-    rez))
-
-(defun random-elt (lst)
-  (elt lst (random (length lst))))
 
 (defun make-node-array (n)
   "Return 2d array of indexes, that can be used as a basis for factory"
@@ -141,20 +131,3 @@
             (push circuit rez))))
     (values (random-elt rez)
             rez)))
-
-(defun copy-array (array &key
-                   (element-type (array-element-type array))
-                   (fill-pointer (and (array-has-fill-pointer-p array)
-                                      (fill-pointer array)))
-                   (adjustable (adjustable-array-p array)))
-  "Returns an undisplaced copy of <_:arg array />, with same
-<_:arg fill-pointer /> and <_:arg adjustab />ility (if any)
-as the original, unless overridden by the keyword arguments"
-  (let ((dims (array-dimensions array)))
-    ;; Dictionary entry for ADJUST-ARRAY requires adjusting a
-    ;; displaced array to a non-displaced one to make a copy
-    (adjust-array
-     (make-array dims
-                 :element-type element-type :fill-pointer fill-pointer
-                 :adjustable adjustable :displaced-to array)
-     dims)))
