@@ -206,4 +206,4 @@ gen-fuel2.lisp comming soon
     (remove #\Space (apply #'strings (nreverse str)) :test #'char=)))
 
 (defun post-factory (factory)
-  (with-auth (post-fuel "219" factory)))
+  (post-fuel "219" factory))
