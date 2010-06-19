@@ -10,8 +10,7 @@
 
 (defstruct node 
   (out-r 0)
-  (out-l 0)
-  (new-l 0))
+  (out-l (list 0)))
 
 (defun make-nodeset (n)
   (let ((rez (make-array n)))
@@ -45,9 +44,9 @@
       (node-func (out-val (in-l i))
                  (out-val (in-r i)))
     (let ((node (node i)))
+      (push o-l (node-out-l node))
       (setf (node-out-r node) o-r
-            (node-new-l node) o-l
-            (aref *nodes* i) node))))
+            (aref *nodes* i) (print node)))))
 
 ;; get at data utils
 
@@ -73,9 +72,12 @@
   (let ((i (cadr outspec)))
     (if i
         (if (eq (car outspec) :l)
-            (if force
-                (node-new-l (node i))
-                (node-out-l (node i)))
+            (let ((node (node i)))
+              (prog1 (if force
+                         (cadr (node-out-l node))
+                         (car  (node-out-l node)))
+                (setf (node-out-l node) (cdr (node-out-l node))
+                      (aref *nodes* i) node)))
             (node-out-r (node i)))
         *in*)))
 
@@ -111,11 +113,8 @@
           (calc-node start)
           (push (out-val end :force t) rez)
           (loop :while remaining-nodes :do
-             (calc-node (car remaining-nodes)))))
-     (loop :for i :from 0 :to (1- n) :do
-         (setf (node-out-l (aref *nodes* i))
-               (node-new-l (aref *nodes* i))))
-      (print *nodes*) (terpri))
+             (calc-node (car remaining-nodes))))))
+      (print *nodes*) (terpri)
     (nreverse rez)))
 
 ;; tests:
