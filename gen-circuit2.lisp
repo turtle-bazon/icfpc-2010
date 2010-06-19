@@ -1,6 +1,8 @@
+;;;
+;;; gen-fule2.lisp
+;;;
 
-(defun strings (&rest strings)
-  (apply #'concatenate 'string strings))
+(in-package :icfpc)
 
 #|
 factory: 

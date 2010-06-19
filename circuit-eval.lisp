@@ -2,16 +2,7 @@
 ;;; circuit-eval.lisp -- eval circuits.
 ;;;
 
-(in-package :cl-user)
-
-;; utils
-
-(defun hash-table-from-list (lst &optional test)
-  (loop
-     :with ht = (make-hash-table :test (or test 'eql))
-     :for (k v) :on lst :by #'cddr
-     :do (setf (gethash k ht) v)
-     :finally (return ht)))
+(in-package :icfpc)
 
 (defvar *circuit*)
 
@@ -57,7 +48,6 @@
             (node-new-l node) o-l
             (aref *nodes* i) node))))
 
-
 ;; get at data utils
 
 (macrolet ((in (dir i)
@@ -86,8 +76,20 @@
             (node-out-r (node i)))
         *in*)))
 
-
 (defvar *in* 0 "Current data at input")
+
+(defun next-node (i)
+  (unless (equal (elt *circuit* 1) (list :r i))  ; output is (:R i)
+    (let* ((array (elt *circuit* 2))
+           (out1 (caadr (elt array i)))
+           (out2 (cadadr (elt array i))))
+      (cond ((equal out1 '(:x)) (cadr out2))
+            ((equal out2 '(:x)) (cadr out1))
+            (t (let* ((in11 (caar (elt array (cadr out1))))
+                      (in12 (cadar (elt array (cadr out1)))))
+                 (cadr (if (find (list :r i) (list in11 in12)
+                                 :test #'equal)
+                           out1 out2))))))))
 
 (defun circuit-eval (circuit input)
   (let* ((*circuit* circuit)
@@ -114,20 +116,6 @@
                (node-new-l (aref *nodes* i)))))
 ;      (print *nodes*) (terpri))
     (nreverse rez)))
-
-(defun next-node (i)
-  (unless (equal (elt *circuit* 1) (list :r i))  ; output is (:R i)
-    (let* ((array (elt *circuit* 2))
-           (out1 (caadr (elt array i)))
-           (out2 (cadadr (elt array i))))
-      (cond ((equal out1 '(:x)) (cadr out2))
-            ((equal out2 '(:x)) (cadr out1))
-            (t (let* ((in11 (caar (elt array (cadr out1))))
-                      (in12 (cadar (elt array (cadr out1)))))
-                 (cadr (if (find (list :r i) (list in11 in12)
-                                 :test #'equal)
-                           out1 out2))))))))
-
 
 ;; test
 

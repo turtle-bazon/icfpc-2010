@@ -1,6 +1,7 @@
-ICFPC 2010 project
 
-Team Skobochka
+  ICFPC 2010 project
+
+  Team Skobochka
 
 ==
 Welcome to the ICFP 2010 contest.
@@ -15,3 +16,45 @@ Your ICFP contest team
 
 * Vsevolod Dyomkin <vseloved@gmail.com>
 
+  Про задание, по-русски:
+
+    В описании задания присутствуют следующие основные пункты:
+
+      (1) Спецификация машин (Technical Specification of Cars).
+      (2) Дополнительные устовия для машин (Proper Cars).
+      (3) Динамика топлива в двигателе машины (Fuels in Cars).
+      (4) Тернарные представления машин и топлива (Ternary Streams).
+      (5) Схемы и фабрики (Circuits).
+      (6) Замечания о стратегии (Remarks on Strategy, Scoring, The Market for Cars and Fuels).
+
+    Текущее состояние репозитория:
+
+      staff/ - диаграммы для фабрик, коды для машин (car-codes), схемы для топлив (последнее - отсутствует).
+
+      icfpc.asd, package.lisp - для сборки:
+      
+        (load "icfpc.asd")
+        (require :icfpc)
+
+      utils.lisp - утилиты.
+
+      get-and-post.lisp - для связи с сервером оргов.
+
+      car.lisp             - 1 пункт - есть
+      car-proper.lisp      - 2 пункт - нет
+      car-fuels.lisp       - 3 пункт - нет
+
+      ternary-streams.lisp - 4 пункт - нет
+
+      5 пункт:
+
+        circuit-parser.lisp - парсер - есть
+        circuit-eval.lisp   - вычислитель (интерпретатор) - есть
+
+        Также есть три варианта генерирования случайных фабрик-схем:
+
+          gen-circuit{1,2,3}.lisp
+
+      6 пункт:
+
+        Чудесным образом мы сейчас в серидине списка тех, у кого score > 0.

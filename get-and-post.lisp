@@ -88,8 +88,6 @@
 
 (defvar *car-codes* (mapcar #'get-car-code *car-ids*))
 
-TODO! need time.
-
 (post-fuel "219" "0L:\n0LX0\#0L0R:\n0L")
 
 |#
