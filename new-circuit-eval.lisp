@@ -108,7 +108,7 @@
 (defun out-val (outspec)
   (let ((i (cadr outspec)))
     (if i
-        (if (print (eq (car outspec) :l))
+        (if (eq (car outspec) :l)
             (let ((node (node i)))
               (prog1 (node-out-l node)
                 (setf (node-out-l node) (node-new-l node)
