@@ -32,6 +32,15 @@
 
 ;; !!! note: (:X)
 
+;; utils
+
+(defun hash-table-from-list (lst &optional test)
+  (loop
+     :with ht = (make-hash-table :test (or test 'eql))
+     :for (k v) :on lst :by #'cddr
+     :do (setf (gethash k ht) v)
+     :finally (return ht)))
+
 
 ;; node structure
 
@@ -177,12 +186,3 @@
                 ((((:L 0) (:X)) ((:L 0) (:X)))))
               *test-sequence*)
 
-
-;; utils
-
-(defun hash-table-from-list (lst &optional test)
-  (loop
-     :with ht = (make-hash-table :test (or test 'eql))
-     :for (k v) :on lst :by #'cddr
-     :do (setf (gethash k ht) v)
-     :finally (return ht)))
