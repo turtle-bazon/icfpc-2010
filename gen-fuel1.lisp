@@ -79,11 +79,17 @@
     (case input-type
       (I0 (setf (I0-gate (ith-gate factory output-gate)) input-gate))
       (I1 (setf (I1-gate (ith-gate factory output-gate)) input-gate))
-      (X (setf (external-gate-input factory) input-gate)))
+      (X (progn
+	   (assert (/= input-gate -1)
+		   nil "Error: external gate is connected to itself")
+	   (setf (external-gate-input factory) input-gate))))
     (case output-type
       (O0 (setf (O0-gate (ith-gate factory input-gate)) output-gate))
       (O1 (setf (O1-gate (ith-gate factory input-gate)) output-gate))
-      (X (setf (external-gate-output factory) output-gate)))
+      (X (progn
+	   (assert (/= output-gate -1)
+		   nil "Error: external gate is connected to itself")
+	   (setf (external-gate-output factory) output-gate))))
     (setf *free-inputs* (remove input-gate *free-inputs* :count 1))
     (setf *free-outputs* (remove output-gate *free-outputs* :count 1))
     factory))
@@ -98,3 +104,4 @@
 ;;	  (insert-connection *factory*
 ;;			     (random-element *free-inputs*)
 ;;			     (random-element *free-outputs*)))
+
