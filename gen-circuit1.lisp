@@ -53,7 +53,7 @@
 
 (defun submit-factory (factory)
   (apply #'strings
-         (coerce (with-auth (post-fuel "219" factory)) 'list)))
+         (coerce (post-fuel "219" factory) 'list)))
 
 (defun test-submit-factory (factory)
   (let ((string (submit-factory factory)))
