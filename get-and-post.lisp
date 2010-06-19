@@ -51,24 +51,24 @@
                       :cookie-jar cookie)))
       0))))
 
-(defun format-cars (cars file &optional (line-length 66))
+(defun format-cars (car-codes car-ids file &optional (line-length 66))
   (with-open-file (s file
 		     :direction :output
 		     :if-exists :supersede
 		     :if-does-not-exist :create)
-    (dotimes (i (length cars))
-      (let* ((car (write-to-string (elt cars i)))
+    (dotimes (i (length car-codes))
+      (let* ((car (write-to-string (elt car-codes i)))
 	     (length (length car)))
-	(format s "~%~A~%" i)
+	(format s "~%~A~%" (elt car-ids i))
 	(dotimes (j (floor length line-length))
-	  (format s "~A~%" (subseq car j (+ j line-length))))
+	  (format s "~A~%" (subseq car (* line-length j) (* line-length (1+ j)))))
 	(format s "~A~%" (subseq car (* line-length (floor length line-length))))))))
 
 ;;; usage:
 
 #|
 
-(defvar *car-ids* (get-car-ids))
+(defparameter *car-ids* (nreverse (get-car-ids)))
 
 (10317 10255 10220 10134 10103 10094 10086 10060 10047 9987 9748 9577 9559 9480
  9258 5310 5293 5231 5224 5162 5157 5151 5145 5138 5130 5109 5076 5011 4991
