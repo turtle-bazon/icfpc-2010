@@ -74,9 +74,10 @@
   (mapcar #'(lambda (e) (print e stream))
           (cons :car-engine (chambers car-engine))))
 
-;;; Example
+;;; Examples:
 
 #|
+
   CAR with one CHAMBER.
 
       upper pipe:  -> section -> section ------------.
@@ -87,7 +88,6 @@
     \ lower pipe:  -> section -> section -> section -'
                                     /
              fuel 1 ---------------'
-|#
 
 (make-car-engine           ;; one chamber
  '(((fuel0 fuel0)          ;; <<-- first  list of fuel-tank names.
@@ -95,7 +95,6 @@
 
 ;; =>
 
-#|
 :CAR-ENGINE 
 
 :CHAMBER 
@@ -108,7 +107,6 @@
 <:section to fuel-tank FUEL0> 
 <:section to fuel-tank FUEL1> 
 <:section to fuel-tank FUEL0>
-|#
 
 (s-car-engine
  (make-car-engine
@@ -117,8 +115,8 @@
 
 ;; =>
 
-#|
 (:CAR-ENGINE
  ((:UPPER-PIPE :PIPE (:SECTION FUEL0 0) (:SECTION FUEL0 0))
   (:LOWER-PIPE :PIPE (:SECTION FUEL0 0) (:SECTION FUEL1 0) (:SECTION FUEL0 0))))
+
 |#
