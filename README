@@ -40,8 +40,6 @@ Your ICFP contest team
 
       get-and-post.lisp - для связи с сервером оргов.
 
-
-
       car.lisp             - 1 пункт - есть
       car-proper.lisp      - 2 пункт - нет
       car-fuels.lisp       - 3 пункт - нет
@@ -52,6 +50,10 @@ Your ICFP contest team
 
         circuit-parser.lisp - парсер - есть
         circuit-eval.lisp   - вычислитель (интерпретатор) - есть
+
+        Также есть три варианта генерирования случайных фабрик-схем:
+
+          gen-circuit{1,2,3}.lisp
 
       6 пункт:
 
