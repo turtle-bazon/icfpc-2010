@@ -124,8 +124,6 @@ gen-fuel2.lisp comming soon
 	      (return)))
 	  (return nil)))))
 
-
-
 (defun copy-array1 (array)
   (let ((copy (make-array (array-dimensions array))))
     (dotimes (i (array-dimension array 0))
