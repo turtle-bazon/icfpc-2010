@@ -79,17 +79,15 @@
     (case input-type
       (I0 (setf (I0-gate (ith-gate factory output-gate)) input-gate))
       (I1 (setf (I1-gate (ith-gate factory output-gate)) input-gate))
-      (X (progn
-	   (assert (/= input-gate -1)
-		   nil "Error: external gate is connected to itself")
-	   (setf (external-gate-input factory) input-gate))))
+      (X (if (= input-gate -1)
+	     (return-from insert-connection 'try-again)
+	     (setf (external-gate-input factory) input-gate))))
     (case output-type
       (O0 (setf (O0-gate (ith-gate factory input-gate)) output-gate))
       (O1 (setf (O1-gate (ith-gate factory input-gate)) output-gate))
-      (X (progn
-	   (assert (/= output-gate -1)
-		   nil "Error: external gate is connected to itself")
-	   (setf (external-gate-output factory) output-gate))))
+      (X (if (= output-gate -1)
+	     (return-from insert-connection 'try-argain)
+	     (setf (external-gate-output factory) output-gate))))
     (setf *free-inputs* (remove input-gate *free-inputs* :count 1))
     (setf *free-outputs* (remove output-gate *free-outputs* :count 1))
     factory))
@@ -99,9 +97,13 @@
   (defparameter *free-inputs* (free-inputs size))
   (defparameter *free-outputs* (free-outputs size)))
 
-;; filling factory:
-;; (print-factory
-;;	  (insert-connection *factory*
-;;			     (random-element *free-inputs*)
-;;			     (random-element *free-outputs*)))
-
+(defun random-factory (size)
+  (init-factory size)
+  (dotimes (i (1+ (* size 2)))
+    (when (eq (insert-connection *factory*
+				 (random-element *free-inputs*)
+				 (random-element *free-outputs*))
+	      'try-again)
+      (decf i)))
+  (print-factory *factory*))
+	
