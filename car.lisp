@@ -4,6 +4,8 @@
 ;;;              CLOS/S-CAR-FORMs representations of CARs.
 ;;;
 
+(in-package :icfpc)
+
 ;;; CLOS representation:
 
 (defclass section ()
