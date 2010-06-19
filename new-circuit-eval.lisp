@@ -135,9 +135,9 @@
 ;                   (print *nodes*) (terpri) (terpri)
                    (let ((next (next-node i)))
                      (when (and next (find next remaining-nodes))
-                       (recur next)))))
+                       (calc-node next)))))
           (setf *in* x)
-          (recur start)
+          (calc-node start)
           (push (out-val end) rez)
           (loop :while remaining-nodes :do
              (calc-node (car remaining-nodes))))))
