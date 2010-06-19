@@ -3,5 +3,5 @@
 ;;;
 
 (defpackage :icfpc
-  (:use :cl :cl-ppcre :drakma)
+  (:use :cl :split-sequence :cl-ppcre :drakma)
   (:export :get-car-ids :get-car-code :post-fuel))
