@@ -51,11 +51,18 @@
                       :cookie-jar cookie)))
       0))))
 
-(defun format-cars (cars file)
+(defun format-cars (cars file &optional (line-length 66))
   (with-open-file (s file
-		     :if-exists :error
+		     :direction :output
+		     :if-exists :supersede
 		     :if-does-not-exist :create)
-    (map nil #'(lambda (car) (format s "~A~%" car)) cars)))
+    (dotimes (i (length cars))
+      (let* ((car (write-to-string (elt cars i)))
+	     (length (length car)))
+	(format s "~%~A~%" i)
+	(dotimes (j (floor length line-length))
+	  (format s "~A~%" (subseq car j (+ j line-length))))
+	(format s "~A~%" (subseq car (* line-length (floor length line-length))))))))
 
 ;;; usage:
 
