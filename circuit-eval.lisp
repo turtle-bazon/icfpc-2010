@@ -34,12 +34,13 @@
   (aref *nodes* i))
 
 (defparameter *node-func*
-  (hash-table-from-list '((0 . 0) (2 0)
+                       ;   L   R  L  R
+  (hash-table-from-list '((0 . 0) (0 2)
                           (0 . 1) (2 2)
-                          (0 . 2) (2 1)
-                          (1 . 0) (2 1)
+                          (0 . 2) (1 2)
+                          (1 . 0) (1 2)
                           (1 . 1) (0 0)
-                          (1 . 2) (1 2)
+                          (1 . 2) (2 1)
                           (2 . 0) (2 2)
                           (2 . 1) (1 1)
                           (2 . 2) (0 0))
@@ -49,7 +50,7 @@
   (apply #'values (gethash (cons l r) *node-func*)))
 
 (defun nodecall (i)
-  (multiple-value-bind (o-r o-l)
+  (multiple-value-bind (o-l o-r)
       (node-func (out-val (in-l i))
                  (out-val (in-r i)))
     (let ((node (node i)))
@@ -109,10 +110,10 @@
           (push (out-val end :force t) rez)
           (loop :while remaining-nodes :do
              (calc-node (car remaining-nodes)))))
-      (loop :for i :from 0 :to (1- n) :do
+     (loop :for i :from 0 :to (1- n) :do
          (setf (node-out-l (aref *nodes* i))
-               (node-new-l (aref *nodes* i)))))
-;      (print *nodes*) (terpri))
+               (node-new-l (aref *nodes* i))))
+      (print *nodes*) (terpri))
     (nreverse rez)))
 
 (defun next-node (i)
@@ -157,6 +158,15 @@
                 (:R 0)
                 ((((:L 0) (:X)) ((:L 0) (:X)))))
               *test-sequence*)
+
+;; 0R: 1LX0#1RX, 1R0L0#0L1L: 0R   22222122122121222
+
+(circuit-eval '((:R 0)
+                (:R 0)
+                ((((:L 1) (:X)) ((:R 1) (:X)))
+                 (((:R 1) (:L 0)) ((:L 0) (:L 1)))))
+              *test-sequence*)
+
 
 ;;;
 ;;; circuit-eval-functions? delete this later.
