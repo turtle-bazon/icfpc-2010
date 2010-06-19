@@ -1,6 +1,8 @@
 ;;;
-;;; utils.lisp -- unsorted utils.
+;;; utils.lisp.
 ;;;
+
+(in-package :icfpc)
 
 ;;; strings:
 

@@ -2,6 +2,8 @@
 ;;; car-proper.lisp --- Proper Cars.
 ;;;
 
+(in-package :icfpc)
+
 ;;; TODO, написать функции:
 
 ;; Считать кол-во бензобаков <= 6.

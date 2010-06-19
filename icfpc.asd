@@ -5,11 +5,26 @@
 (asdf:defsystem :icfpc
   :depends-on (:cl-ppcre :rutils :drakma)
   :components ((:file "package")
+
                ;; utils & tools
+
                (:file "utils")
                (:file "get-and-post")
+
                ;; models
+
                (:file "car")
-               (:file "gen-fuel")
+               (:file "car-proper")
+               (:file "car-fuels")
+
+               (:file "car-ternary-streams")
+               (:file "fuel-ternary-streams")
+
                (:file "circuit-parser")
-               (:file "circuit-eval")))
+               (:file "circuit-eval")
+
+               (:file "gen-circuit1")
+               (:file "gen-circuit2") 
+               (:file "gen-circuit3")
+
+               ))

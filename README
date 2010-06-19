@@ -44,7 +44,8 @@ Your ICFP contest team
       car-proper.lisp      - 2 пункт - нет
       car-fuels.lisp       - 3 пункт - нет
 
-      ternary-streams.lisp - 4 пункт - нет
+      car-ternary-streams.lisp - 4 пункт - нет
+      fuel-ternary-streams.lisp         - нет
 
       5 пункт:
 
