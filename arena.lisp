@@ -53,7 +53,9 @@
 ;;;  |  CIRCUITS                                                               |
 ;;;  `-------------------------------------------------------------------------^
 
+;;;
 ;;; parser
+;;;
 
 (parse-circuit
 "19L:
@@ -143,42 +145,55 @@ X18L0#X7L:
     ((:L 9) (:L 17) (:R 19) (:R 5))
     ((:X) (:L 18) (:X) (:L 7)))
 
+;;;
 ;;; evalutor
+;;;
 
-(defparameter *test-sequence*
-  '(0 1 2 0 2 1 0 1 2 1 0 2 0 1 2 0 2))
+;; input - 01202101210201202
+(defparameter *test-sequence* '(0 1 2 0 2 1 0 1 2 1 0 2 0 1 2 0 2))
 
-;; 0L: X0R0#X0R: 0L  02120112100002120
-(circuit-eval '((:L 0)
-                (:L 0)
-                ((((:X) (:R 0)) ((:X) (:R 0)))))
-              *test-sequence*)
+;; TODO: X -> X circuits:
 
-;; 0L: X0L0#0RX: 0R  22120221022022120
-(circuit-eval '((:L 0)
-                (:R 0)
-                ((((:X) (:L 0)) ((:R 0) (:X)))))
-              *test-sequence*)
+(circuit-eval (parse-circuit "X::X") *test-sequence*)
+;; 01202101210201202 ?
 
-;; 0R: 0RX0#X0L: 0L  01210221200001210
-(circuit-eval '((:R 0)
-                (:L 0)
-                ((((:R 0) (:X)) ((:X) (:L 0)))))
-              *test-sequence*)
+(circuit-eval (parse-circuit "X:0L0R0#0L0R:X") *test-sequence*)
+;; 01202101210201202 ?
 
-;; 0R: 0LX0#0LX: 0R  22022022022022022
-(circuit-eval '((:R 0)
-                (:R 0)
-                ((((:L 0) (:X)) ((:L 0) (:X)))))
-              *test-sequence*)
+;; Basic circuits:
 
-;; 0R: 1LX0#1RX, 1R0L0#0L1L: 0R   22222122122121222
+(dolist (circuit '("0L: X0L0#0RX: 0R"
+                   "0R: 0LX0#0LX: 0R"
+                   "0L: X0R0#X0R: 0L"
+                   "0R: 0RX0#X0L: 0L"))
+  (format t "~A == ~A~%"
+            circuit
+            (circuit-eval (parse-circuit circuit) *test-sequence*)))
 
-(circuit-eval '((:R 0)
-                (:R 0)
-                ((((:L 1) (:X)) ((:R 1) (:X)))
-                 (((:R 1) (:L 0)) ((:L 0) (:L 1)))))
-              *test-sequence*)
+(circuit-eval (parse-circuit "0L: X0L0#0RX: 0R") *test-sequence*)
+;; 22120221022022120 - ok
+
+(circuit-eval (parse-circuit "0R: 0LX0#0LX: 0R") *test-sequence*)
+;; 22022022022022022 - ok
+
+;; why {0} ? this is a basic circuits!
+
+(circuit-eval (parse-circuit "0L: X0R0#X0R: 0L") *test-sequence*)
+;; 02120112100002120 ?
+
+(circuit-eval (parse-circuit "0R: 0RX0#X0L: 0L") *test-sequence*)
+;; 01210221200001210 ?
+
+;; yet another {0}...
+
+(circuit-eval (parse-circuit "0L:X0R0#X0R:0L") *test-sequence*)
+
+;; complex circuits:
+
+(circuit-eval (parse-circuit "0R: 1LX0#1RX, 1R0L0#0L1L: 0R") *test-sequence*)
+;; 22222122122121222 ?
+
+
 
 ;; circuit from Task
 
@@ -212,11 +227,19 @@ X18L0#X7L:
 
 (circuit-eval *task-circuit* *test-sequence*)
 
+;; why {0} ?
+
 ;;;  ,-------------------------------------------------------------------------.
 ;;;  |  GENERATE circuits                                                      |
 ;;;  `-------------------------------------------------------------------------^
 
 ???
+
+pUt cOdE HeRe
+
+!!!
+
+We can generate, generate, computate, send to the server and get the key-factory.
 
 ;;;  ,-------------------------------------------------------------------------.
 ;;;  |  GET and POST from server                                               |
