@@ -108,7 +108,7 @@
               2nd (remove r2 2nd))))
 
     rez))
-
+#|
 (defun make-circuit (n)
   (let ((proto (make-node-array n)))
-    (
+    (|#

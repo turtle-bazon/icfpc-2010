@@ -67,3 +67,25 @@ A - левый вход, B - правый вход
 файл gen-fuel1.lisp пытается это делать, но там много быдлокода, и поэтому ашипки
 gen-fuel2.lisp comming soon
 |#
+
+
+(defun make-factory (size)
+  (make-array (list size 4)))
+
+(defun possible-inputs (size)
+  (let ((lst nil))
+    (dotimes (i size)
+      (push i lst))
+    (nreverse lst)))
+
+(defun fill-inputs (size)
+  (let ((possible-input (possible-inputs size))
+	(factories nil))
+    (dotimes (i0 size)
+      (dotimes (i1 size)
+	(let ((fact (make-factory size)))
+	  (dotimes (i size)
+	    (setf (aref fact i 0) (elt possible-input i0))
+	    (setf (aref fact i 1) (elt possible-input i1)))
+	  (push fact factories))))
+    (nreverse factories)))
