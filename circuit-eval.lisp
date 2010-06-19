@@ -34,12 +34,12 @@
   (aref *nodes* i))
 
 (defparameter *node-func*
-  (hash-table-from-list '((0 . 0) (0 2)
+  (hash-table-from-list '((0 . 0) (2 0)
                           (0 . 1) (2 2)
-                          (0 . 2) (1 2)
-                          (1 . 0) (1 2)
+                          (0 . 2) (2 1)
+                          (1 . 0) (2 1)
                           (1 . 1) (0 0)
-                          (1 . 2) (2 1)
+                          (1 . 2) (1 2)
                           (2 . 0) (2 2)
                           (2 . 1) (1 1)
                           (2 . 2) (0 0))
@@ -76,17 +76,15 @@
   (defun in-l (i) (in :l i))
   (defun in-r (i) (in :r i)))
 
-(defun out-val (outspec)
+(defun out-val (outspec &key force)
   (let ((i (cadr outspec)))
     (if i
         (if (eq (car outspec) :l)
-            (let ((node (node i)))
-              (prog1 (node-out-l node)
-                (setf (node-out-l node) (node-new-l node)
-                      (aref *nodes* i) node)))
+            (if force
+                (node-new-l (node i))
+                (node-out-l (node i)))
             (node-out-r (node i)))
         *in*)))
-
 
 
 (defvar *in* 0 "Current data at input")
@@ -103,16 +101,19 @@
         (labels ((calc-node (i)
                    (nodecall i)
                    (setf remaining-nodes (remove i remaining-nodes))
-;                   (print *nodes*) (terpri) (terpri)
                    (let ((next (next-node i)))
                      (when (and next (find next remaining-nodes))
                        (calc-node next)))))
           (setf *in* x)
           (calc-node start)
-          (push (out-val end) rez)
+          (push (out-val end :force t) rez)
           (loop :while remaining-nodes :do
-             (calc-node (car remaining-nodes))))))
-    rez))
+             (calc-node (car remaining-nodes)))))
+      (loop :for i :from 0 :to (1- n) :do
+         (setf (node-out-l (aref *nodes* i))
+               (node-new-l (aref *nodes* i))))
+;      (print *nodes*) (terpri))
+    (nreverse rez)))
 
 (defun next-node (i)
   (unless (equal (elt *circuit* 1) (list :r i))  ; output is (:R i)
