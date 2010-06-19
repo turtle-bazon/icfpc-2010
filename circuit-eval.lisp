@@ -170,7 +170,7 @@
 ;; / \
 
 ;; 3^6 or 18! ???
-
+#|
 (defun left-gate-function (left-in rigth-in)
   (case left-in
     (0 (case rigth-in
@@ -217,3 +217,4 @@
          (0 2)
          (1 2)
          (2 1)))))
+|#
