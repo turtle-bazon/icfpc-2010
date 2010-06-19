@@ -66,6 +66,8 @@
   (defun in-l (i) (in :l i))
   (defun in-r (i) (in :r i)))
 
+(defvar *in* 0 "Current data at input")
+
 (defun out-val (outspec &key force)
   (let ((i (cadr outspec)))
     (if i
@@ -75,8 +77,6 @@
                 (node-out-l (node i)))
             (node-out-r (node i)))
         *in*)))
-
-(defvar *in* 0 "Current data at input")
 
 (defun next-node (i)
   (unless (equal (elt *circuit* 1) (list :r i))  ; output is (:R i)
