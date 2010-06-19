@@ -146,6 +146,7 @@
                 ((((:L 0) (:X)) ((:L 0) (:X)))))
               *test-sequence*)
 
+#|
 ;;;
 ;;; circuit-eval-functions? delete this later.
 ;;;
@@ -206,3 +207,4 @@
          (0 2)
          (1 2)
          (2 1)))))
+|#

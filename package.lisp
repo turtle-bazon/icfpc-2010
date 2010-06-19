@@ -1,7 +1,7 @@
 ;;;
-;;; package.lisp -- common packege for our ICFPC project.
+;;; package.lisp -- common package for our ICFPC project.
 ;;;
 
 (defpackage :icfpc
-  (:use :cl :rutils :cl-ppcre :drakma)
+  (:use :cl :cl-ppcre :drakma)
   (:export :get-car-ids :get-car-code :post-fuel))
