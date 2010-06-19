@@ -35,6 +35,7 @@ Your ICFP contest team
       
         (load "icfpc.asd")
         (require :icfpc)
+        (in-package :icfpc)
 
       utils.lisp - утилиты.
 
