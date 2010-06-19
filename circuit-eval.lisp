@@ -8,7 +8,7 @@
 
 ;; node structure
 
-(defstruct node 
+(defstruct node
   (out-r 0)
   (out-l (list 0)))
 
@@ -116,104 +116,3 @@
              (calc-node (car remaining-nodes))))))
       (print *nodes*) (terpri)
     (nreverse rez)))
-
-;; tests:
-
-#|
-
-(defparameter *test-sequence*
-  '(0 1 2 0 2 1 0 1 2 1 0 2 0 1 2 0 2))
-
-;; 0L: X0R0#X0R: 0L  02120112100002120
-(circuit-eval '((:L 0)
-                (:L 0)
-                ((((:X) (:R 0)) ((:X) (:R 0)))))
-              *test-sequence*)
-
-;; 0L: X0L0#0RX: 0R  22120221022022120
-(circuit-eval '((:L 0)
-                (:R 0)
-                ((((:X) (:L 0)) ((:R 0) (:X)))))
-              *test-sequence*)
-
-;; 0R: 0RX0#X0L: 0L  01210221200001210
-(circuit-eval '((:R 0)
-                (:L 0)
-                ((((:R 0) (:X)) ((:X) (:L 0)))))
-              *test-sequence*)
-
-;; 0R: 0LX0#0LX: 0R  22022022022022022
-(circuit-eval '((:R 0)
-                (:R 0)
-                ((((:L 0) (:X)) ((:L 0) (:X)))))
-              *test-sequence*)
-
-;; 0R: 1LX0#1RX, 1R0L0#0L1L: 0R   22222122122121222
-
-(circuit-eval '((:R 0)
-                (:R 0)
-                ((((:L 1) (:X)) ((:R 1) (:X)))
-                 (((:R 1) (:L 0)) ((:L 0) (:L 1)))))
-              *test-sequence*)
-
-;;;
-;;; circuit-eval-functions? delete this later.
-;;;
-;;; input-ternary-stream -> circuit -> [factory] -> fuel-ternary-stream.
-;;;
-
-;;; GATE
-
-;; \ /
-;;  *
-;; / \
-
-;; 3^6 or 18! ???
-
-(defun left-gate-function (left-in rigth-in)
-  (case left-in
-    (0 (case rigth-in
-         (0 ?)
-         (1 ?)
-         (2 ?)))
-    (1 (case rigth-in
-         (0 ?)
-         (1 ?)
-         (2 ?)))
-    (2 (case rigth-in
-         (0 ?)
-         (1 ?)
-         (2 ?)))))
-
-(defun rigth-gate-function (left-in rigth-in)
-  (case left-in
-    (0 (case rigth-in
-         (0 ?)
-         (1 ?)
-         (2 ?)))
-    (1 (case rigth-in
-         (0 ?)
-         (1 ?)
-         (2 ?)))
-    (2 (case rigth-in
-         (0 ?)
-         (1 ?)
-         (2 ?)))))
-
-;;; puzzzle:
-
-(defun puzzzle-function (left-in rigth-in)
-  (case left-in
-    (0 (case rigth-in
-         (0 1)
-         (1 0)
-         (2 0)))
-    (1 (case rigth-in
-         (0 1)
-         (1 0)
-         (2 2)))
-    (2 (case rigth-in
-         (0 2)
-         (1 2)
-         (2 1)))))
-|#
