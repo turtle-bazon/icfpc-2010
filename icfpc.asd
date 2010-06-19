@@ -1,8 +1,9 @@
 
 (asdf:defsystem :icfpc
-  :depends-on (:rutils :cl-ppcre :drakma )
-  :components (;; tools
-               (:file "post")
+  :depends-on (:cl-ppcre :rutils :drakma)
+  :components ((:file "package")
+               ;; tools
+               (:file "get-and-post")
                ;; models
                (:file "car")
                (:file "gen-fuel")
