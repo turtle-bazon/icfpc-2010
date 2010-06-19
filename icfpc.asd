@@ -7,4 +7,5 @@
                ;; models
                (:file "car")
                (:file "gen-fuel")
-               (:file "circuit-parser")))
+               (:file "circuit-parser")
+               (:file "circuit-eval")))
