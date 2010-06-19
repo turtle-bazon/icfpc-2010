@@ -68,7 +68,6 @@ A - левый вход, B - правый вход
 gen-fuel2.lisp comming soon
 |#
 
-
 (defun make-factory (size)
   (make-array (list size 8)))
 
@@ -76,7 +75,7 @@ gen-fuel2.lisp comming soon
   (if (null l) '(())
   (mapcan #'(lambda (x)
     (mapcar #'(lambda (y) (cons x y))
-      (p (remove x l :count 1)))) l)))
+      (permutations (remove x l :count 1)))) l)))
 
 (defun list-of-bits (size)
   (append (make-list size :initial-element 0)
@@ -124,6 +123,7 @@ gen-fuel2.lisp comming soon
 	  (return nil)))))
 
 
+
 (defun copy-array1 (array)
   (let ((copy (make-array (array-dimensions array))))
     (dotimes (i (array-dimension array 0))
@@ -132,7 +132,7 @@ gen-fuel2.lisp comming soon
     copy))
 
 (defun possible-factories (size)
-  (let ((gate-perms (possible-permutations (list-of-gates size)))
+  (let ((gate-perms (list (random-elt (possible-permutations (list-of-gates size)))))
 	(sym-perms (possible-bit-permutations size))
 	(tmp-facts nil)
 	(facts nil))
@@ -143,7 +143,8 @@ gen-fuel2.lisp comming soon
 	  (setf (aref f gate 0) (pop perm))
 	  (setf (aref f gate 2) (pop perm)))
 	(push f tmp-facts)))
-    (dolist (fact tmp-facts)
+;    (dolist (fact tmp-facts)
+    (let ((fact (random-elt tmp-facts)))
       (dotimes (i (length sym-perms))
 	(let ((perm (elt sym-perms i))
 	      (f (copy-array1 fact)))
@@ -154,9 +155,53 @@ gen-fuel2.lisp comming soon
     (map nil #'fill-outputs facts)
     (remove nil (mapcar #'test-factory facts))))
 
-(defun format-factory (factory &optional (stream t))
-  (dotimes (i (array-dimension factory 0))
-    (format stream "~A~A~A~A0#~A~A~A~A~A~%"
-	    (aref factory i 0) (aref factory i 1) (aref factory i 2) (aref factory i 3)
-	    (aref factory i 4) (aref factory i 5) (aref factory i 6) (aref factory i 7)
-	    (if (= i (1- (array-dimension factory 0))) #\: #\,))))
+(defun insert-external-gate (factory in out)
+  (let ((source (list #\X #\Space)) (dest (list #\X #\Space))
+	(in-pos (first in)) (out-pos (first out)))
+    (if (char= (second in) #\L)
+	(progn (rotatef (first source)
+			(aref factory in-pos 0))
+	       (rotatef (second source)
+			(aref factory in-pos 1)))
+	(progn (rotatef (first source)
+			(aref factory in-pos 2))
+	       (rotatef (second source)
+			(aref factory in-pos 3))))
+    (if (char= (second out) #\L)
+	(progn (rotatef (first dest)
+			(aref factory out-pos 4))
+	       (rotatef (second dest)
+			(aref factory out-pos 5)))
+	(progn (rotatef (first dest)
+			(aref factory out-pos 6))
+	       (rotatef (second dest)
+			(aref factory out-pos 7))))
+    (list source dest)))
+
+(defun format-factory (fact)
+  (let ((str nil))
+    (dotimes (i (array-dimension fact 0))
+      (push (format nil "~A~A~A~A0#~A~A~A~A~A"
+		    (aref fact i 0) (aref fact i 1) (aref fact i 2) (aref fact i 3)
+		    (aref fact i 4) (aref fact i 5) (aref fact i 6) (aref fact i 7)
+		    (if (= i (1- (array-dimension fact 0))) #\: #\,))
+	    str))
+    (remove #\Space (apply #'strings (nreverse str)) :test #'char=)))
+
+(defun format-factory-with-ext-gate (factory in out)
+  (let* ((str nil)
+	 (fact (copy-array factory))
+	 (ext-gate (insert-external-gate fact in out)))
+    (push (strings (write-to-string (first (first ext-gate))) (string (second (first ext-gate)))) str)
+    (push ":" str)
+    (dotimes (i (array-dimension factory 0))
+      (push (format nil "~A~A~A~A0#~A~A~A~A~A"
+		    (aref fact i 0) (aref fact i 1) (aref fact i 2) (aref fact i 3)
+		    (aref fact i 4) (aref fact i 5) (aref fact i 6) (aref fact i 7)
+		    (if (= i (1- (array-dimension factory 0))) #\: #\,))
+	    str))
+    (push (strings (write-to-string (first (second ext-gate))) (string (second (second ext-gate)))) str)
+    (remove #\Space (apply #'strings (nreverse str)) :test #'char=)))
+
+(defun post-factory (factory)
+  (with-auth (post-fuel "219" factory)))
