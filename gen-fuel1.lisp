@@ -92,3 +92,9 @@
   (defparameter *factory* (make-factory size))
   (defparameter *free-inputs* (free-inputs size))
   (defparameter *free-outputs* (free-outputs size)))
+
+;; filling factory:
+;; (print-factory
+;;	  (insert-connection *factory*
+;;			     (random-element *free-inputs*)
+;;			     (random-element *free-outputs*)))
