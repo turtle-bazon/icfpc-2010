@@ -67,4 +67,52 @@
       (let ((result (test-submit-factory (random-factory factory-size))))
         (if result (push result proper-factories))))
     (nreverse proper-factories)))
-      
+
+
+
+;;; new variant
+
+(defun range (n)
+  (let (rez)
+    (dotimes (i n)
+      (push i rez))
+    rez))
+
+(defun random-elt (lst)
+  (elt lst (random (length lst))))
+
+(defun make-node-array (n)
+  "Return 2d array of indexes, that can be used as a basis for factory"
+  (let ((rez (make-array (list n 4) :initial-element nil))
+        (1st (range n))
+        (2nd (range n))
+        (i 0))
+    (macrolet ((fill-row (r1 r2)
+                 `(let* ((r1 ,r1)
+                         (r2 ,r2)
+                         (j1 (+ 2 (random 2)))
+                         (j2 (+ 2 (random 2))))
+                    (when (aref rez r1 j1)
+                      (setf j1 (if (= j1 2) 3 2)))
+                    (when (aref rez r2 j2)
+                      (setf j2 (if (= j2 2) 3 2)))
+                    (when (= r1 r2)
+                      (setf j1 2
+                            j2 3))
+                    (setf (aref rez i 0)   r1
+                          (aref rez i 1)   r2
+                          (aref rez r1 j1) i
+                          (aref rez r2 j2) i)
+
+                    (setf 1st (remove r1 1st)
+                          2nd (remove r2 2nd)))))
+
+      (dotimes (i (1- n))
+        (fill-row (random-elt (remove i 1st))
+                  (random-elt (remove i 2nd))))
+
+      (setf i (1- n))
+      (fill-row (car 1st)
+                (car 2nd)))
+
+    rez))
