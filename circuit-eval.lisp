@@ -1,5 +1,10 @@
+;;;
+;;; circuit-eval.lisp -- factory interpretater.
+;;;
+;;;                      input-ternary-stream -> circuit -> [factory] -> fuel-ternary-stream.
+;;;
 
-;; circuit -> [factory] -> fuel-ternary-streams
+(in-package :icfpc)
 
 ;;; GATE
 
