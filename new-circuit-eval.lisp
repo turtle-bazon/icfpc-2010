@@ -4,7 +4,6 @@
 
 (in-package :cl-user)
 
-
 (defvar *circuit*)
 
 ;; ((:L 19)
