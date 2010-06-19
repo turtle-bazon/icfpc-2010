@@ -1,5 +1,6 @@
 
-
+(defun strings (&rest strings)
+  (apply #'concatenate 'string strings))
 
 (defun defgate (index I0 I1 O0 O1)
   (list index (list I0 I1 O0 O1)))
@@ -99,11 +100,42 @@
 
 (defun random-factory (size)
   (init-factory size)
-  (dotimes (i (1+ (* size 2)))
+  (dotimes (i (1+ (* size 2)) *factory*)
     (when (eq (insert-connection *factory*
 				 (random-element *free-inputs*)
 				 (random-element *free-outputs*))
 	      'try-again)
-      (decf i)))
-  (print-factory *factory*))
-	
+      (return 'try-again))))
+
+(defun random-R/L ()
+  (if (= (random 2) 1)
+      "R" "L"))
+
+(defun prepare-factory (factory)
+  (let ((struct (copy-tree factory)))
+    (dolist (gate struct)
+      (if (= (first gate) -1)
+	  (progn (setf (first gate) "X")
+		 (setf (cdr gate)
+		       (mapcar #'(lambda (num)
+				   (if (= num -1)
+				       "X"
+				       (strings (write-to-string num)
+						(random-R/L))))
+			       (cdr gate))))
+	  (setf (second gate)
+		(mapcar #'(lambda (num)
+			    (if (= num -1)
+				"X"
+				(strings (write-to-string num)
+					 (random-R/L))))
+			(second gate)))))
+    struct))
+
+(defun factory-output (factory)
+  (mapcar #'(lambda (x) (append (second x) '(",")))
+	  (cdr factory)))
+
+(defun submit-factory (factory)
+  (apply #'strings
+         (coerce (with-auth (post-fuel "219" factory)) 'list)))
