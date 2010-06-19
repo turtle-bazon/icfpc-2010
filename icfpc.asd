@@ -3,7 +3,7 @@
 ;;;
 
 (asdf:defsystem :icfpc
-  :depends-on (:cl-ppcre :rutils :drakma)
+  :depends-on (:split-sequence :cl-ppcre :drakma)
   :components ((:file "package")
 
                ;; utils & tools
