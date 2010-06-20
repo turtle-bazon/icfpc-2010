@@ -189,6 +189,8 @@ X18L0#X7L:
 
 ;; circuit from Task
 
+;; 10221220002011011
+
 (defvar *task-circuit*
   (parse-circuit
 "19L:
