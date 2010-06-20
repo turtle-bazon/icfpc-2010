@@ -4,10 +4,10 @@
 
 (in-package :icfpc)
 
-(defvar *user*       "Skobochka")
-(defvar *pass*       "158874878014849802423980469050775541970745292308997461923937")
-(defvar *address*    "http://icfpcontest.org/icfp10/static/j_spring_security_check")
-(defvar *parameters* `(("j_username" . ,*user*) ("j_password" . ,*pass*)))
+(defparameter *user*       "Skobochka")
+(defparameter *pass*       "158874878014849802423980469050775541970745292308997461923937")
+(defparameter *address*    "http://icfpcontest.org/icfp10/static/j_spring_security_check")
+(defparameter *parameters* `(("j_username" . ,*user*) ("j_password" . ,*pass*)))
 
 (defmacro with-cookie ((var address parameters) &body body)
  `(let ((,var (make-instance 'cookie-jar)))

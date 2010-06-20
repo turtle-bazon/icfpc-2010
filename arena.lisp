@@ -390,18 +390,29 @@ have produced fuel for 0 tanks using 0 ingredients of air dimension mismatch
 ;;; Преобразования *key-fuel* к другим топливам путём добавления гейтов с петлями:
 ;;;
 
-(unparse-circuit (add-loop (parse-circuit *key-fuel*) (:l 1) (:l 1)))
-
-(let ((s-key-fuel (parse-circuit *key-fuel*)))
+(dotimes (j 8)
   (dotimes (i 8)
-    (dotimes (j 8)
-      (dolist (si '(:r :l))
-        (dolist (sj '(:r :l))
-          (format t "(~A ~A) (~A ~A)~%  ~A~%" si i sj j
-                  (post-fuel "219" (unparse-circuit (add-loop s-key-fuel `(,si ,i) `(,sj ,j))))))))))
+    (dolist (si '(:r :l))
+      (dolist (sj '(:r :l))
+        (format t "(~A ~A) (~A ~A)~%  ~A~%" si i sj j
+                (post-fuel "219" (unparse-circuit (add-loop (parse-circuit *key-fuel*) `(,si ,i) `(,sj ,j)))))))))
 
-(let ((s-key-fuel (parse-circuit *key-fuel*)))
+;; find (R 4) (R 4)
+
+(dotimes (i 8)
   (dolist (si '(:r :l))
-    (dolist (sj '(:r :l))
-      (format t "(~A :X) (~A :X)~%  ~A~%" si sj
-              (post-fuel "219" (unparse-circuit (add-loop s-key-fuel `(,si :x) `(,sj :x))))))))
+    (format t "(~A ~A) (~A ~A)~%  ~A~%" si i sj j
+            (post-fuel "219" (unparse-circuit (add-loop-with-ext-gate (parse-circuit *key-fuel*) `(,si ,i)))))))
+
+;; find (L 1)
+
+(defparameter *some-fuel*
+  (unparse-circuit (add-loop-with-ext-gate (parse-circuit *key-fuel*) '(:l 1))))
+
+"0R:1LX0#2L1L,0R3L0#0L2R,0L1R0#X3R,5L2R0#1R4L,3R4R0#6R4R,7R7L0#3L7L,6R4L0#7R6L,5R6L0#5R5L,8L8R0#8L8R:2L"
+
+"0R:1LX0#2L1L,0R3L0#0L2R,0L1R0#X3R,5L2R0#1R4L,3R4R0#6R4R,7R7L0#3L7L,6R4L0#7R6L,5R6L0#5R5L:2L"
+
+(dolist (car *car-ids*)
+  (format t "post key-fuel for ~A...~%" car)
+  (format t "  ~A~%" (post-fuel car *some-fuel*)))
