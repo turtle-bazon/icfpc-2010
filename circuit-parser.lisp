@@ -31,13 +31,13 @@
 
 (defun parse-circuit (string)
   (let* ((split           (split-sequence #\: (delete-whitespaces string)))
-         (external-input  (first split))
-         (external-output (third split))
-         (circuit-body    (mapcar #'(lambda (e)
-                                      (if (string= e "")
-                                          nil
-                                          (parse-gate e)))
-                                  (split-sequence #\, (second split)))))
+	 (external-input  (first split))
+	 (external-output (third split))
+	 (circuit-body    (remove nil (mapcar #'(lambda (e)
+						  (if (string= e "")
+						    nil
+						    (parse-gate e)))
+					      (split-sequence #\, (second split))))))
     (list (parse-token external-input) (parse-token external-output) circuit-body)))
 
 ;;; s-circuit accessors:
