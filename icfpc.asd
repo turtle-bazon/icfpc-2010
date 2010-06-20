@@ -23,6 +23,8 @@
                (:file "circuit-parser")
                (:file "circuit-eval")
 
+	       (:file "mod-circuit")
+
                ;; brute-forces, generators
 
                (:file "gen-ternary")
