@@ -46,28 +46,24 @@
     (3 (setf (3-in-gate (nth-gate (first pos) s-circuit)) val))
     (4 (setf (4-in-gate (nth-gate (first pos) s-circuit)) val))))
 
+(defun swap-wires (pos1 pos2 s-circuit)
+  (rotatef (nth-in-gate pos1 s-circuit)
+	   (nth-in-gate pos2 s-circuit))
+  s-circuit)
 
 
-#|
 (defun add-loop (s-circuit input output)
   (let ((new (circuit-length s-circuit)))
     (push-node s-circuit)
     (setf (nth-gate new s-circuit) 
 	  (list (list (list :L new) (list :R new))
 		(list (list :L new) (list :R new))))
-    (if (eq (first input) :L)
-	(rotatef (nth-in-gate (list new 2)
-
-	(rotatef (2-in-gate (nth-gate new s-circuit))
-		 (3-in-gate (nth-gate (second input) s-circuit)))
-	(rotatef (2-in-gate (nth-gate new s-circuit))
-		 (4-in-gate (nth-gate (second input) s-circuit))))
-    (if (eq (first output) :L)
-	(rotatef (4-in-gate (nth-gate new s-circuit))
-		 (1-in-gate (nth-gate (second output) s-circuit)))
-	(rotatef (4-in-gate (nth-gate new s-circuit))
-		 (2-in-gate (nth-gate (second output) s-circuit))))
-    s-circuit))
-    
-  
-|#
+    (let ((input-pos (list (second input)
+			   (if (eq (first input) :L)
+			       3 4)))
+	  (output-pos (list (second output)
+			    (if (eq (first output) :L)
+				1 2))))
+      (swap-wires (list new 2) input-pos s-circuit)
+      (swap-wires (list new 4) output-pos s-circuit)
+      s-circuit)))
