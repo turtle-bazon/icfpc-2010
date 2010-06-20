@@ -52,7 +52,6 @@
            (nth-in-gate pos2 s-circuit))
   s-circuit)
 
-<<<<<<< HEAD
 (defun swap-with-ext-input (pos s-circuit)
   (rotatef (nth-in-gate pos s-circuit)
 	   (external-input s-circuit))
@@ -81,8 +80,6 @@
 	  (swap-with-ext-output gate-pos s-circuit))
       s-circuit)))
 
-=======
->>>>>>> aee1d4688077c3dedcbeb39b3a5cff318bcd53a8
 (defun add-loop (s-circuit input output)
   (let ((new (circuit-length s-circuit)))
     (push-node s-circuit)
