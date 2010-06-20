@@ -4,6 +4,21 @@
 
 (in-package :icfpc)
 
+;;; anaphoric:
+
+(defmacro if-it (test then &optional else)
+ `(let ((it ,test))
+    (if it ,then ,else)))
+
+;;; lists:
+
+(defun flatten (lst)
+  (labels ((rec (x acc)
+             (cond ((null x) acc)
+                   ((atom x) (cons x acc))
+                   (t (rec (car x) (rec (cdr x) acc))))))
+    (rec lst nil)))
+
 ;;; strings:
 
 (defun strings (&rest strings)
