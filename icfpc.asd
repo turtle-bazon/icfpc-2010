@@ -30,4 +30,8 @@
                (:file "gen-circuit2") 
                (:file "gen-circuit3")
 
+               ;; graphvis generator
+
+               (:file "graphviz-gen")
+
                ))
