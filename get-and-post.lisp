@@ -24,11 +24,27 @@
      (scan-to-strings
       "<pre>(.*)</pre>"
       (substitute #\Space #\Newline
-                  (http-request
-                   (format nil "http://icfpcontest.org/icfp10/instance/~a/solve" car-id)
-                   :method :post
-                   :parameters (list (cons "contents" factory-string))
-                   :cookie-jar cookie))))))
+                  (http-request (format nil "http://icfpcontest.org/icfp10/instance/~a/solve" car-id)
+                                :method :post
+                                :parameters `(("contents" . ,factory-string))
+                                :cookie-jar cookie))))))
+
+(defun post-car (car-code factory-string)
+  (with-cookie (cookie *address* *parameters*)
+    (let ((page (substitute
+                 #\Space #\Newline
+                 (http-request "http://icfpcontest.org/icfp10/instance"
+                               :method :post
+                               :parameters `(("problem"                  . ,car-code)
+                                             ("exampleSolution.contents" . ,factory-string))
+                               :cookie-jar cookie))))
+      (if-it (scan-to-strings "<pre>(.*parse error.*)</pre>" page)
+             (values :parse-error it)
+             (if-it (scan-to-strings "instance already exists" page)
+                    :car-already-exists
+                    (if-it (scan-to-strings "<pre>(.*Ja.*)</pre>" page)
+                           (values :car-not-posted-yet it)
+                           (scan-to-strings "<pre>(.*)</pre>" page)))))))
 
 (defun get-car-ids ()
   (with-cookie (cookie *address* *parameters*)
