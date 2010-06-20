@@ -39,11 +39,11 @@
                                              ("exampleSolution.contents" . ,factory-string))
                                :cookie-jar cookie))))
       (if-it (scan-to-strings "<pre>(.*parse error.*)</pre>" page)
-             (values :parse-error it)
+             (list :parse-error it)
              (if-it (scan-to-strings "instance already exists" page)
                     :car-already-exists
                     (if-it (scan-to-strings "<pre>(.*Ja.*)</pre>" page)
-                           (values :car-not-posted-yet it)
+                           (list :car-not-posted-yet it)
                            (scan-to-strings "<pre>(.*)</pre>" page)))))))
 
 (defun get-car-ids ()
