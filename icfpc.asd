@@ -23,6 +23,9 @@
                (:file "circuit-parser")
                (:file "circuit-eval")
 
+               ;; brute-forces, generators
+
+               (:file "gen-ternary")
                (:file "gen-circuit1")
                (:file "gen-circuit2") 
                (:file "gen-circuit3")
