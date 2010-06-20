@@ -97,7 +97,7 @@
     (:x "X")))
 
 (defun unparse-gate (gate)
-  (format nil "~A~A0#~A~A,~%"
+  (format nil "~A~A0#~A~A,"
           (unparse-token (1-in-gate gate))
           (unparse-token (2-in-gate gate))
           (unparse-token (3-in-gate gate))
@@ -107,7 +107,7 @@
   (apply #'concatenate 'string (mapcar #'unparse-gate gates)))
 
 (defun unparse-circuit (s-circuit)
-  (format nil "~A:~%~A:~A"
+  (format nil "~A:~A:~A"
           (unparse-token (external-input s-circuit))
-          (unparse-gates (circuit-body s-circuit))
+          (cut (unparse-gates (circuit-body s-circuit)))
           (unparse-token (external-output s-circuit))))
