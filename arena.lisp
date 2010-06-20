@@ -152,13 +152,16 @@ X18L0#X7L:
 ;; input - 01202101210201202
 (defparameter *test-sequence* '(0 1 2 0 2 1 0 1 2 1 0 2 0 1 2 0 2))
 
-;; TODO: X -> X circuits:
+;; TODO: F -> F circuits:
 
-(circuit-eval (parse-circuit "X::X") *test-sequence*)
-;; 01202101210201202 ?
+(dolist (circuit '("X::X"
+                   "X:0L0R0#0L0R:X"))
+                   ;; more?
+  (format t "~A == ~A~%"
+            circuit
+            (circuit-eval (parse-circuit circuit) *test-sequence*)))
 
-(circuit-eval (parse-circuit "X:0L0R0#0L0R:X") *test-sequence*)
-;; 01202101210201202 ?
+;; ^ error and error
 
 ;; Basic circuits:
 
@@ -170,30 +173,19 @@ X18L0#X7L:
             circuit
             (circuit-eval (parse-circuit circuit) *test-sequence*)))
 
-(circuit-eval (parse-circuit "0L: X0L0#0RX: 0R") *test-sequence*)
 ;; 22120221022022120 - ok
-
-(circuit-eval (parse-circuit "0R: 0LX0#0LX: 0R") *test-sequence*)
 ;; 22022022022022022 - ok
-
-;; why {0} ? this is a basic circuits!
-
-(circuit-eval (parse-circuit "0L: X0R0#X0R: 0L") *test-sequence*)
-;; 02120112100002120 ?
-
-(circuit-eval (parse-circuit "0R: 0RX0#X0L: 0L") *test-sequence*)
-;; 01210221200001210 ?
+;; error! {0}, not 02120112100002120
+;; error! {0}, not 01210221200001210
 
 ;; yet another {0}...
-
 (circuit-eval (parse-circuit "0L:X0R0#X0R:0L") *test-sequence*)
+;; so, error!
 
 ;; complex circuits:
 
 (circuit-eval (parse-circuit "0R: 1LX0#1RX, 1R0L0#0L1L: 0R") *test-sequence*)
-;; 22222122122121222 ?
-
-
+;; 22222122122121222 - ok
 
 ;; circuit from Task
 
@@ -225,29 +217,9 @@ X18L0#X7L:
 
 (defvar *task-sequence* '(0 2 2 2 2 2 2 0 2 1 0 1 1 0 0 1 1))
 
-(circuit-eval *task-circuit* *test-sequence*)
+(circuit-eval *task-circuit* *task-sequence*)
 
-;; why {0} ?
-
-;;;  ,-------------------------------------------------------------------------.
-;;;  |  GENERATE circuits                                                      |
-;;;  `-------------------------------------------------------------------------^
-
-???
-
-pUt cOdE HeRe
-
-!!!
-
-Нужно генерировать, вычислять, отправлять на сервер - тогда в конце концов можно будет получить
-ключевую фабрику (ну и топливо).
-
-После того как у нас будет пример топлива можно будет начать генерировать троичные коды для
-машин и получать сообщения парсера для них - также как получали для схем. И постить машины
-с простейшим топливом.
-
-Альтернатива (перебору и генерации) - чёткое моделирование всех элементов. Она же позволит
-создавать специальные топлава и машины.
+;; why {0} ? error!
 
 ;;;  ,-------------------------------------------------------------------------.
 ;;;  |  GET and POST from server                                               |
@@ -273,4 +245,70 @@ pUt cOdE HeRe
 
 (defvar *car-codes* (mapcar #'get-car-code *car-ids*))
 
-(post-fuel "219" "0L:\n0LX0\#0L0R:\n0L")
+;;;  ,-------------------------------------------------------------------------.
+;;;  |  TRY to GENERATE FUELs / CIRCUITs / CARs                                |
+;;;  `-------------------------------------------------------------------------^
+
+???
+
+pUt cOdE HeRe
+
+!!!
+
+Нужно генерировать валидные схемы, вычислять, отправлять на сервер - тогда в конце концов можно
+будет получить ключевую фабрику (ну и топливо). Т.е. *key-fuel* и prefix.
+
+;; ключевая фабрика
+
+(defvar *key-fuel*
+"0R:
+1LX0#2L1L,
+0R3L0#0L2R,
+0L1R0#X3R,
+5L2R0#1R4L,
+3R4R0#6R4R,
+7R7L0#3L7L,
+6R4L0#7R6L,
+5R6L0#5R5L:
+2L")
+
+;; префикс
+
+prefix >> 11021210112101221
+
+Это простейшее топливо можно будет разослать существующим машинам.
+
+;; отправим ключ на все существующие машины
+
+(dolist (car *car-ids*)
+  (format t "post key-fuel for ~A...~%" car)
+  (format t "  ~A~%" (post-fuel car *key-fuel*)))
+>>
+circuit output starts with 11021210112101221 this is a legal prefix you
+have produced fuel for 0 tanks using 0 ingredients of air dimension mismatch
+
+Но - это ни к чему не приведёт.
+
+После того как у нас будет пример топлива можно будет начать генерировать троичные коды для
+машин и получать сообщения парсера для них - также как получали для схем. И постить машины
+с простейшим топливом.
+
+;; начнём перебирать все машины, мы можем видеть - валидные они, существуют ли они,
+;; или их ещё не запостили, и наконец - сочетаются ли они с топливом.
+
+(dolist (random-car (all-ternary 10)) ;; is so slooowe
+  (format t "post car ~A...~%" ternary)
+  (format t "  ~A~%" (post-car random-car *key-fuel*)))
+
+Но - простейшее топливо не подходит для "рабочих" машин.
+
+Уже этот бутфорс очень муторный, перебор машин/топлив будет просто нереален.
+
+Более сложное топливо получается путем prefix + dyn_part, где dyn_part вычисляется исходя
+из конструкции машины (динамики топлива в трубках).
+
+Альтернатива (перебору и генерации) - чёткое моделирование всех элементов. Она же позволит
+создавать специальные топлива и машины.
+
+Ещё - параметры для post-car имеют названия problem и solution, т.е. это намекает на то,
+что тут нужно использовать какой-либо problem-solver (GPS, SAT, CNF ?).
