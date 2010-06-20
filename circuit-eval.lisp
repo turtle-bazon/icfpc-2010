@@ -46,7 +46,7 @@
     (let ((node (node i)))
       (push o-l (node-out-l node))
       (setf (node-out-r node) o-r
-            (aref *nodes* i) (print node)))))
+            (aref *nodes* i) node))))
 
 ;; get at data utils
 
