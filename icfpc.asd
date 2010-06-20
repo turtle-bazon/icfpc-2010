@@ -22,6 +22,7 @@
 
                (:file "circuit-parser")
                (:file "circuit-eval")
+               (:file "circuit-eval2")
 
                (:file "mod-circuit")
 
