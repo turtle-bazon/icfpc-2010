@@ -9,13 +9,14 @@
 ;; node structure
 
 (defstruct node
+  i
   (out-r 0)
-  (out-l (list 0)))
+  (out-l 0))
 
 (defun make-nodeset (n)
   (let ((rez (make-array n)))
     (dotimes (i n)
-      (setf (aref rez i) (make-node)))
+      (setf (aref rez i) (make-node :i i)))
     rez))
 
 (defvar *nodes*)  ; (make-nodeset 20))
@@ -44,8 +45,8 @@
       (node-func (out-val (in-l i))
                  (out-val (in-r i)))
     (let ((node (node i)))
-      (push o-l (node-out-l node))
-      (setf (node-out-r node) o-r
+      (setf (node-out-l node) o-l
+            (node-out-r node) o-r
             (aref *nodes* i) (print node)))))
 
 ;; get at data utils
@@ -68,16 +69,11 @@
 
 (defvar *in* 0 "Current data at input")
 
-(defun out-val (outspec &key force)
+(defun out-val (outspec)
   (let ((i (cadr outspec)))
     (if i
         (if (eq (car outspec) :l)
-            (let ((node (node i)))
-              (prog1 (if force
-                         (cadr (node-out-l node))
-                         (car  (node-out-l node)))
-                (setf (node-out-l node) (cdr (node-out-l node))
-                      (aref *nodes* i) node)))
+            (node-out-l (node i))
             (node-out-r (node i)))
         *in*)))
 
@@ -111,7 +107,7 @@
                        (calc-node next)))))
           (setf *in* x)
           (calc-node start)
-          (push (out-val end :force t) rez)
+          (push (out-val end) rez)
           (loop :while remaining-nodes :do
              (calc-node (car remaining-nodes))))))
       (print *nodes*) (terpri)
