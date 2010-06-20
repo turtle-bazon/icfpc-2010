@@ -19,15 +19,14 @@
 
 (defun post-fuel (car-id factory-string)
   (with-cookie (cookie *address* *parameters*)
-    (nth-value
-     1
-     (scan-to-strings
-      "<pre>(.*)</pre>"
-      (substitute #\Space #\Newline
-                  (http-request (format nil "http://icfpcontest.org/icfp10/instance/~a/solve" car-id)
-                                :method :post
-                                :parameters `(("contents" . ,factory-string))
-                                :cookie-jar cookie))))))
+    (let ((page (substitute #\Space #\Newline
+                            (http-request (format nil "http://icfpcontest.org/icfp10/instance/~a/solve" car-id)
+                                          :method :post
+                                          :parameters `(("contents" . ,factory-string))
+                                          :cookie-jar cookie))))
+      (if-it (scan-to-strings "already submitted" page)
+             :already-submitted
+             (nth-value 1 (scan-to-strings "<pre>(.*)</pre>" page))))))
 
 (defun post-car (car-code factory-string)
   (with-cookie (cookie *address* *parameters*)
