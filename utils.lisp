@@ -27,10 +27,10 @@
 ;;; sequences:
 
 (defun range (n)
-  (let (rez)
+  (let (result)
     (dotimes (i n)
-      (push i rez))
-    rez))
+      (push i result))
+    (nreverse result)))
 
 (defun random-elt (lst)
   (elt lst (random (length lst))))
