@@ -24,6 +24,9 @@
 (defun strings (&rest strings)
   (apply #'concatenate 'string strings))
 
+(defun cut (string)
+  (subseq string 0 (1- (length string))))
+
 ;;; sequences:
 
 (defun range (n)
