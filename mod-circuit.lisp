@@ -51,6 +51,33 @@
 	   (nth-in-gate pos2 s-circuit))
   s-circuit)
 
+(defun swap-with-ext-input (pos s-circuit)
+  (rotatef (nth-in-gate pos s-circuit)
+	   (external-input s-circuit))
+  s-circuit)
+
+(defun swap-with-ext-output (pos s-circuit)
+  (rotatef (nth-in-gate pos s-circuit)
+	   (external-output s-circuit))
+  s-circuit)
+
+(defun add-loop-with-ext-gate (s-circuit gate &key (X-role :input))
+  (let ((new (circuit-length s-circuit)))
+    (push-node s-circuit)
+    (setf (nth-gate new s-circuit)
+	  (list (list (list :L new) (list :R new))
+		(list (list :L new) (list :R new))))
+    (let ((gate-pos (list (second gate)
+			  (let ((pos
+				 (if (eq (first input) :L)
+				     1 2)))
+			    (if (eq X-role :input)
+				pos (+ pos 2))
+			    pos))))
+      (if (eq X-role :input)
+	  (swap-with-ext-input gate-pos s-circuit)
+	  (swap-with-ext-output gate-pos s-circuit))
+      s-circuit)))
 
 (defun add-loop (s-circuit input output)
   (let ((new (circuit-length s-circuit)))
