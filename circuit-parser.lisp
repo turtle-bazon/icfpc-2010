@@ -107,7 +107,8 @@
   (apply #'concatenate 'string (mapcar #'unparse-gate gates)))
 
 (defun unparse-circuit (s-circuit)
-  (format nil "~A:~%~A:~A"
-          (unparse-token (external-input s-circuit))
-          (unparse-gates (circuit-body s-circuit))
-          (unparse-token (external-output s-circuit))))
+  (remove #\, (format nil "~A:~%~A:~A"
+		      (unparse-token (external-input s-circuit))
+		      (unparse-gates (circuit-body s-circuit))
+		      (unparse-token (external-output s-circuit)))
+	  :count 1 :from-end t))
