@@ -70,7 +70,7 @@
 		(list (list :L new) (list :R new))))
     (let ((gate-pos (list (second gate)
 			  (let ((pos
-				 (if (eq (first input) :L)
+				 (if (eq (first gate) :L)
 				     1 2)))
 			    (if (eq X-role :input)
 				pos (+ pos 2))
