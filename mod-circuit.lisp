@@ -1,3 +1,4 @@
+
 (in-package :icfpc)
 
 (defun (setf external-input) (val s-circuit)
@@ -26,8 +27,8 @@
 
 (defun push-node (s-circuit)
   (setf (circuit-body s-circuit)
-	(append (circuit-body s-circuit)
-		'(()))))
+        (append (circuit-body s-circuit)
+                '(()))))
 
 (defun nth-in-gate (pos s-circuit)
   ;; pos: '(номер гейта позиция), позиция = 1,2,3,4
@@ -48,22 +49,21 @@
 
 (defun swap-wires (pos1 pos2 s-circuit)
   (rotatef (nth-in-gate pos1 s-circuit)
-	   (nth-in-gate pos2 s-circuit))
+           (nth-in-gate pos2 s-circuit))
   s-circuit)
-
 
 (defun add-loop (s-circuit input output)
   (let ((new (circuit-length s-circuit)))
     (push-node s-circuit)
     (setf (nth-gate new s-circuit) 
-	  (list (list (list :L new) (list :R new))
-		(list (list :L new) (list :R new))))
+          (list (list (list :L new) (list :R new))
+                (list (list :L new) (list :R new))))
     (let ((input-pos (list (second input)
-			   (if (eq (first input) :L)
-			       3 4)))
-	  (output-pos (list (second output)
-			    (if (eq (first output) :L)
-				1 2))))
+                           (if (eq (first input) :L)
+                               3 4)))
+          (output-pos (list (second output)
+                            (if (eq (first output) :L)
+                                1 2))))
       (swap-wires (list new 2) input-pos s-circuit)
       (swap-wires (list new 4) output-pos s-circuit)
       s-circuit)))
