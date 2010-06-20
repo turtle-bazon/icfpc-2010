@@ -23,13 +23,13 @@
                (:file "circuit-parser")
                (:file "circuit-eval")
 
-	       (:file "mod-circuit")
+               (:file "mod-circuit")
 
                ;; brute-forces, generators
 
                (:file "gen-ternary")
                (:file "gen-circuit1")
-               (:file "gen-circuit2") 
+               (:file "gen-circuit2")
                (:file "gen-circuit3")
 
                ;; graphvis generator
