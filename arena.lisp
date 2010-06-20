@@ -390,11 +390,7 @@ have produced fuel for 0 tanks using 0 ingredients of air dimension mismatch
 ;;; Преобразования *key-fuel* к другим топливам путём добавления гейтов с петлями:
 ;;;
 
-(let ((s-key-fuel (parse-circuit *key-fuel*)))
-  (dolist (si '(:r :l))
-    (dolist (sj '(:r :l))
-      (format t "(~A :X) (~A :X)~%  ~A~%" si sj
-              (post-fuel "219" (unparse-circuit (add-loop s-key-fuel `(,si x) `(,sj x))))))))
+(unparse-circuit (add-loop (parse-circuit *key-fuel*) (:l 1) (:l 1)))
 
 (let ((s-key-fuel (parse-circuit *key-fuel*)))
   (dotimes (i 8)
@@ -404,4 +400,8 @@ have produced fuel for 0 tanks using 0 ingredients of air dimension mismatch
           (format t "(~A ~A) (~A ~A)~%  ~A~%" si i sj j
                   (post-fuel "219" (unparse-circuit (add-loop s-key-fuel `(,si ,i) `(,sj ,j))))))))))
 
-(unparse-circuit (add-loop (parse-circuit *key-fuel*) (:l 1) (:l 1)))
+(let ((s-key-fuel (parse-circuit *key-fuel*)))
+  (dolist (si '(:r :l))
+    (dolist (sj '(:r :l))
+      (format t "(~A :X) (~A :X)~%  ~A~%" si sj
+              (post-fuel "219" (unparse-circuit (add-loop s-key-fuel `(,si :x) `(,sj :x))))))))
