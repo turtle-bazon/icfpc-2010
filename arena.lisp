@@ -353,7 +353,7 @@ have produced fuel for 0 tanks using 0 ingredients of air dimension mismatch
 ;; или их ещё не запостили, и наконец - сочетаются ли они с топливом.
 
 (dolist (random-car (all-ternary 10)) ;; is so slooowe
-  (format t "post car ~A...~%" ternary)
+  (format t "post car ~A...~%" random-car)
   (format t "  ~A~%" (post-car random-car *key-fuel*)))
 
 Но - простейшее топливо не подходит для "рабочих" машин.
