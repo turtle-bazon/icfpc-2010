@@ -87,3 +87,27 @@
               (aref array i 2) (3-in-gate s-gate)
               (aref array i 3) (4-in-gate s-gate))))
     array))
+
+;;; back convertion s-circuit to factory-string:
+
+(defun unparse-token (token)
+  (case (first token)
+    (:l (format nil "~AL" (second token)))
+    (:r (format nil "~AR" (second token)))
+    (:x "X")))
+
+(defun unparse-gate (gate)
+  (format nil "~A~A0#~A~A,~%"
+          (unparse-token (1-in-gate gate))
+          (unparse-token (2-in-gate gate))
+          (unparse-token (3-in-gate gate))
+          (unparse-token (4-in-gate gate))))
+
+(defun unparse-gates (gates)
+  (apply #'concatenate 'string (mapcar #'unparse-gate gates)))
+
+(defun unparse-circuit (s-circuit)
+  (format nil "~A:~%~A:~A"
+          (unparse-token (external-input s-circuit))
+          (unparse-gates (circuit-body s-circuit))
+          (unparse-token (external-output s-circuit))))
